@@ -50,10 +50,10 @@ if __name__ == '__main__':
             right *= 4
             bottom *= 4
             left *= 4
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 255, 0), cv2.FILLED)
+            cv2.rectangle(frame, (left, top), (right, bottom+10), (0, 255, 0), 2)
+            cv2.rectangle(frame, (left, bottom + 35), (right, bottom), (0, 255, 0), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (0, 0, 255), 1)
+            cv2.putText(frame, name, (left, bottom + 20), font, 0.8, (0, 0, 255), 1)
             print("- Terdeteksi {} di ({}, {})".format(name, left, top))
 
         # Display the resulting image

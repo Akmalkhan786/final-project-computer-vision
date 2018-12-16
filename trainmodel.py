@@ -19,11 +19,12 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
         for img_path in image_files_in_folder(os.path.join(train_dir, class_dir)):
             image = face_recognition.load_image_file(img_path)
-            face_location = face_recognition.face_locations(image)
+            face_location = face_recognition.face_locations(image, number_of_times_to_upsample=0, model="cnn")
 
             if len(face_location) != 1:
                 print("Image {} not suitable for training: {}".format(img_path, ("Didn't find a face" if len(face_location) < 1 else "Found more than one face")))
             else:
+                print("Found a face on {}".format(img_path))
                 X.append(face_recognition.face_encodings(image, face_location)[0])
                 y.append(class_dir)
 
@@ -43,6 +44,6 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
 
 if __name__ == '__main__':
-    print("Training KNN classifier...")
+    print("Training CNN + KNN classifier...")
     classifier = train(train_dir="foto", model_save_path="trained_model.clf", n_neighbors=2, knn_algo='kd_tree')
     print("Training complete!")
