@@ -28,8 +28,8 @@ def predict(X_img_path, knn_clf=None, model_path=None, distance_threshold=0.6):
 
 if __name__ == '__main__':
     video_capture = cv2.VideoCapture(0)
-    video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
-    video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
+    video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
     face_locations = []
     face_encodings = []
@@ -50,14 +50,14 @@ if __name__ == '__main__':
             right *= 4
             bottom *= 4
             left *= 4
-            cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
-            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 0, 255), cv2.FILLED)
+            cv2.rectangle(frame, (left, top), (right, bottom), (0, 255, 0), 2)
+            cv2.rectangle(frame, (left, bottom - 35), (right, bottom), (0, 255, 0), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (255, 255, 255), 1)
-            print("- Ada {} di ({}, {})".format(name, left, top))
+            cv2.putText(frame, name, (left + 6, bottom - 6), font, 1.0, (0, 0, 255), 1)
+            print("- Terdeteksi {} di ({}, {})".format(name, left, top))
 
         # Display the resulting image
-        cv2.imshow('Video', frame)
+        cv2.imshow('Realtime Face Identifier', frame)
 
         # Hit 'q' on the keyboard to quit!
         if cv2.waitKey(1) & 0xFF == ord('q'):
