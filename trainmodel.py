@@ -5,6 +5,7 @@ import os.path
 import pickle
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
+import time
 
 def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree', verbose=False):
     """
@@ -12,7 +13,10 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
     """
     X = []
     y = []
+    total_faces = 0
+    ignored_images = 0
 
+    start_time = time.time()
     for class_dir in os.listdir(train_dir):
         if not os.path.isdir(os.path.join(train_dir, class_dir)):
             continue
@@ -22,9 +26,11 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
             face_location = face_recognition.face_locations(image, model="cnn")
 
             if len(face_location) != 1:
+                ignored_images = ignored_images + 1
                 print("Image {} not suitable for training: {}".format(img_path, ("Didn't find a face" if len(face_location) < 1 else "Found more than one face")))
             else:
                 print("Found a face on {}".format(img_path))
+                total_faces = total_faces + 1
                 X.append(face_recognition.face_encodings(image, face_location)[0])
                 y.append(class_dir)
 
@@ -35,11 +41,17 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
     knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
     knn_clf.fit(X, y)
+    elapsed_time = time.time() - start_time
+    print("It takes {:.3f} to completely trains the model".format(elapsed_time))
 
     if model_save_path is not None:
+        start_time = time.time()
         with open(model_save_path, 'wb') as f:
             pickle.dump(knn_clf, f)
+        elapsed_time = time.time() - start_time
+        print("Saving model takes {:.3f} to complete".format(elapsed_time))
 
+    print("Saved as {} with total identified faces : {:,} and ignored images : {:,}".format(model_save_path, total_faces, ignored_images))
     return knn_clf
 
 
