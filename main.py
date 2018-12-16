@@ -31,10 +31,8 @@ if __name__ == '__main__':
     video_capture.set(cv2.CAP_PROP_FRAME_WIDTH, 720)
     video_capture.set(cv2.CAP_PROP_FRAME_HEIGHT, 480)
 
-    face_locations = []
-    face_encodings = []
-    face_names = []
-    # process_this_frame = True
+    predictions = None
+    process_this_frame = True
 
     while True:
         ret, frame = video_capture.read()
@@ -42,9 +40,12 @@ if __name__ == '__main__':
         small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
         rgb_small_frame = small_frame[:, :, ::-1]
 
-        # if process_this_frame:
-        predictions = predict(rgb_small_frame, model_path="trained_model.clf")
-        # face_names = []
+        if process_this_frame:
+        	predictions = predict(rgb_small_frame, model_path="trained_model.clf")
+
+        process_this_frame = not process_this_frame
+
+        # Drawing label name
         for name, (top, right, bottom, left) in predictions:
             top *= 4
             right *= 4
@@ -53,7 +54,7 @@ if __name__ == '__main__':
             cv2.rectangle(frame, (left, top), (right, bottom+10), (0, 255, 0), 2)
             cv2.rectangle(frame, (left, bottom + 35), (right, bottom), (0, 255, 0), cv2.FILLED)
             font = cv2.FONT_HERSHEY_DUPLEX
-            cv2.putText(frame, name, (left, bottom + 20), font, 0.8, (0, 0, 255), 1)
+            cv2.putText(frame, name, (left + 10, bottom + 25), font, 0.8, (0, 0, 255), 1)
             print("- Terdeteksi {} di ({}, {})".format(name, left, top))
 
         # Display the resulting image
