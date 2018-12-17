@@ -6,6 +6,7 @@ import pickle
 import face_recognition
 from face_recognition.face_recognition_cli import image_files_in_folder
 import time
+from collections import Counter
 
 def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree', verbose=False):
     """
@@ -13,8 +14,9 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
     """
     X = []
     y = []
-    total_faces = 0
+    known_faces = 0
     ignored_images = 0
+    total_images = 0
 
     start_time = time.time()
     for class_dir in os.listdir(train_dir):
@@ -23,14 +25,17 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
         for img_path in image_files_in_folder(os.path.join(train_dir, class_dir)):
             image = face_recognition.load_image_file(img_path)
+            total_images += 1
             face_location = face_recognition.face_locations(image, model="cnn")
 
             if len(face_location) != 1:
-                ignored_images = ignored_images + 1
-                print("Image {} not suitable for training: {}".format(img_path, ("Didn't find a face" if len(face_location) < 1 else "Found more than one face")))
+                ignored_images += 1
+                if verbose:
+                    print("Image {} not suitable for training: {}".format(img_path, ("Didn't find a face" if len(face_location) < 1 else "Found more than one face")))
             else:
-                print("Found a face on {}".format(img_path))
-                total_faces = total_faces + 1
+                if verbose:
+                    print("Found a face on {}".format(img_path))
+                known_faces += 1
                 X.append(face_recognition.face_encodings(image, face_location)[0])
                 y.append(class_dir)
 
@@ -42,20 +47,20 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
     knn_clf = neighbors.KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=knn_algo, weights='distance')
     knn_clf.fit(X, y)
     elapsed_time = time.time() - start_time
-    print("It takes {:.3f} to completely trains the model".format(elapsed_time))
+    print("It takes {:.3f} to completely trains the model.".format(elapsed_time))
 
     if model_save_path is not None:
-        start_time = time.time()
         with open(model_save_path, 'wb') as f:
             pickle.dump(knn_clf, f)
-        elapsed_time = time.time() - start_time
-        print("Saving model takes {:.3f} to complete".format(elapsed_time))
 
-    print("Saved as {} with total identified faces : {:,} and ignored images : {:,}".format(model_save_path, total_faces, ignored_images))
+    identified_person = len(Counter(y).keys())
+    print("Saved as {} => {:,} total datasets, {:,} identified faces, {:,} ignored images, and {:,} identified person."
+          .format(model_save_path, total_images, known_faces, ignored_images, identified_person))
+
     return knn_clf
 
 
 if __name__ == '__main__':
-    print("Training CNN + KNN classifier...")
+    print("Training classifier... Please wait...")
     classifier = train(train_dir="foto", model_save_path="trained_model.clf", n_neighbors=2, knn_algo='kd_tree')
     print("Training complete!")

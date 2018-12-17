@@ -12,7 +12,7 @@ def predict(X_img_path, knn_clf=None, model_path=None, distance_threshold=0.6):
         with open(model_path, 'rb') as f:
             knn_clf = pickle.load(f)
 
-    X_face_locations = face_recognition.face_locations(X_img_path, model="cnn")
+    X_face_locations = face_recognition.face_locations(X_img_path)
 
     if len(X_face_locations) == 0:
         return []
