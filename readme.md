@@ -30,9 +30,9 @@ final-project-computer-vision/
 │   │   │   ├── something.jpeg
 │   │   │   ├── something.png
 │   │   ├── ...
-└── main.py
-└── readme.md
-└── trained_model.clf
+├── main.py
+├── readme.md
+├── trained_model.clf
 └── trainmodel.py
 ```
 
