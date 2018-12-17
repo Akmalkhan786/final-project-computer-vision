@@ -37,10 +37,15 @@ final-project-computer-vision/
 ```
 
 **foto/** : LFW funneled dataset combined with personal dataset.
+
 **foto_asli/** : Personal dataset.
+
 **main.py** : Main program. Run this file after training your model.
+
 **readme.md** : This file. Contains any information you need.
+
 **trained_model.clf** : Pre-trained model to use.
+
 **trainmodel.py** : Run this file if you want to train the model on your own dataset.
 
 ## Usage
