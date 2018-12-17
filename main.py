@@ -41,7 +41,7 @@ if __name__ == '__main__':
         rgb_small_frame = small_frame[:, :, ::-1]
 
         if process_this_frame:
-        	predictions = predict(rgb_small_frame, model_path="trained_model.clf", distance_threshold=0.55)
+        	predictions = predict(rgb_small_frame, model_path="trained_model.clf", distance_threshold=0.6)
 
         process_this_frame = not process_this_frame
 

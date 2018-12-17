@@ -62,5 +62,5 @@ def train(train_dir, model_save_path=None, n_neighbors=None, knn_algo='ball_tree
 
 if __name__ == '__main__':
     print("Training classifier... Please wait...")
-    classifier = train(train_dir="foto", model_save_path="trained_model.clf", n_neighbors=2, knn_algo='kd_tree', verbose=True)
+    classifier = train(train_dir="foto", model_save_path="trained_model.clf", n_neighbors=2, verbose=True)
     print("Training complete!")

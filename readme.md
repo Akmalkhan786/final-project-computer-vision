@@ -36,9 +36,9 @@ final-project-computer-vision/
 └── trainmodel.py
 ```
 
-**foto/** : LFW funneled dataset combined with personal dataset.
+**foto/** : Personal Dataset mixed with some LFW funneled dataset.
 
-**foto_asli/** : Personal dataset.
+**foto_asli/** : Full LFW + personal dataset.
 
 **main.py** : Main program. Run this file after training your model.
 
